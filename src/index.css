@@ -4,7 +4,7 @@
   --font-basic: 'Poppins', sans-serif;
   --font-accent: 'Bellefair', serif;
 
-  --color-black: #272727;
+  --color-black: #1e1e1e;
   --color-gold: #c29545;
   --color-beige: #f8e6bd;
   --color-red: #bb2f29;
@@ -41,4 +41,11 @@ body {
   max-width: 1280px;
   min-height: 100vh;
   background-color: var(--color-black);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
 }
