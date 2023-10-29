@@ -1,7 +1,14 @@
 import './App.css';
+import Search from './components/Search/Search';
+import CardsList from './components/CardsList/CardsList';
 
 function App() {
-  return <p>Hello, world!</p>;
+  return (
+    <>
+      <Search />
+      <CardsList />
+    </>
+  );
 }
 
 export default App;
