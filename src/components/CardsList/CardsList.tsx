@@ -1,12 +1,13 @@
 import React from 'react';
 import { getPictures } from '../../utils/requests';
 import Card from '../Card/Card';
-import styles from './cardsList.module.css';
 import { Loader } from '../Loader/Loader';
+import styles from './cardsList.module.css';
+import { ArtObject } from '../../types/types';
 
 export default class CardsList extends React.Component<
   unknown,
-  { pictures: []; isLoaded: boolean }
+  { pictures: ArtObject[]; isLoaded: boolean }
 > {
   constructor(props: unknown) {
     super(props);
