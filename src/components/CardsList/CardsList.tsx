@@ -28,7 +28,6 @@ export default class CardsList extends React.Component<
 
   render() {
     const { pictures: allPictures } = this.state;
-    console.log(this.state.isLoaded);
     return (
       <div className={styles.cardsContainer}>
         {allPictures &&
