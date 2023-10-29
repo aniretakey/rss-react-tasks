@@ -1,3 +1,11 @@
+.title {
+    font-family: var(--font-accent);
+    color: var(--color-gold);
+    font-size: 32px;
+    margin: 0 auto;
+    text-align: center;
+}
+
 .form {
     display: flex;
     flex-direction: row;
@@ -14,7 +22,7 @@
     min-width: 50%;
     height: 50px;
     outline: none;
-    font-family: var(--font-basic);
+    font-family: var(--font-accent);
     font-size: 24px;
     font-weight: 500;
     background-color: var(--color-black);
