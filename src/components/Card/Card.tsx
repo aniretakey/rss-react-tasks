@@ -18,8 +18,8 @@ export default class Card extends React.Component<CardsProps> {
   componentDidMount() {
     getPictures(1)
       .then((response) => response.json())
-      .then((data) => {
-        this.setState({ pictures: data.artObjects });
+      .then(({ artObjects }) => {
+        this.setState({ pictures: artObjects });
       });
   }
 

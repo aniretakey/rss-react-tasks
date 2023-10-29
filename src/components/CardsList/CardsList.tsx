@@ -2,51 +2,60 @@ import React from 'react';
 import { getPictures } from '../../utils/requests';
 import Card from '../Card/Card';
 import styles from './cardsList.module.css';
+import { Loader } from '../Loader/Loader';
 
 export default class CardsList extends React.Component<
   unknown,
-  { pictures: [] }
+  { pictures: []; isLoaded: boolean }
 > {
   constructor(props: unknown) {
     super(props);
     this.state = {
       pictures: [],
+      isLoaded: false,
     };
   }
 
   componentDidMount() {
+    this.setState({ isLoaded: false });
     getPictures(5)
       .then((response) => response.json())
       .then(({ artObjects }) => {
         this.setState({ pictures: artObjects });
+        this.setState({ isLoaded: true });
       });
   }
 
   render() {
     const { pictures: allPictures } = this.state;
+    console.log(this.state.isLoaded);
     return (
       <div className={styles.cardsContainer}>
         {allPictures &&
-          allPictures.map(
-            ({
-              id,
-              title,
-              webImage,
-              principalOrFirstMaker,
-            }: {
-              id: string;
-              title: string;
-              webImage: { url: string };
-              principalOrFirstMaker: string;
-            }) => (
-              <Card
-                key={id}
-                imgURL={webImage.url}
-                title={title}
-                author={principalOrFirstMaker}
-              />
+          (this.state.isLoaded ? (
+            allPictures.map(
+              ({
+                id,
+                title,
+                webImage,
+                principalOrFirstMaker,
+              }: {
+                id: string;
+                title: string;
+                webImage: { url: string };
+                principalOrFirstMaker: string;
+              }) => (
+                <Card
+                  key={id}
+                  imgURL={webImage.url}
+                  title={title}
+                  author={principalOrFirstMaker}
+                />
+              )
             )
-          )}
+          ) : (
+            <Loader />
+          ))}
       </div>
     );
   }

@@ -5,4 +5,5 @@
   flex-direction: row;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  padding: 0 10px;
 }
