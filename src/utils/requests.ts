@@ -6,10 +6,7 @@ async function getPictures(page: number): Promise<Response> {
   return await fetch(URL);
 }
 
-async function searchByCentury(
-  century: string | number,
-  page?: number
-): Promise<Response> {
+async function searchByCentury(century = '18', page?: 1): Promise<Response> {
   const URL = `https://www.rijksmuseum.nl/api/en/collection/?key=${key}&f.dating.period=${+century}&p=${page}`;
   return await fetch(URL);
 }

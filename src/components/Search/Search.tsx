@@ -7,20 +7,27 @@ export default class Search extends React.Component<
   InputState
 > {
   private inputValueFromLS = localStorage.getItem('inputValue');
+  btnRef: React.RefObject<HTMLButtonElement>;
+  inputRef: React.RefObject<HTMLInputElement>;
   constructor(props: Record<string, unknown>) {
     super(props);
     this.state = {
       inputValue: this.inputValueFromLS ? this.inputValueFromLS : '',
     };
+    this.btnRef = React.createRef();
+    this.inputRef = React.createRef();
   }
 
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ inputValue: e.target.value });
-    localStorage.setItem('inputValue', e.target.value);
   };
 
   public handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    localStorage.setItem(
+      'inputValue',
+      this.inputRef.current?.value.trim() || ''
+    );
     this.setState({ inputValue: '' });
   };
 
@@ -32,6 +39,7 @@ export default class Search extends React.Component<
         </h1>
         <form className={styles.form}>
           <input
+            ref={this.inputRef}
             type="text"
             value={this.state.inputValue}
             placeholder="Search something beautiful..."
@@ -39,6 +47,7 @@ export default class Search extends React.Component<
             className={styles.input}
           />
           <button
+            ref={this.btnRef}
             type="submit"
             onClick={this.handleClick}
             className={styles.searchBtn}

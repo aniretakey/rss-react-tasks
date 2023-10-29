@@ -1,25 +1,26 @@
 import React from 'react';
-import { getPictures } from '../../utils/requests';
+import { searchByCentury } from '../../utils/requests';
 import Card from '../Card/Card';
 import { Loader } from '../Loader/Loader';
 import styles from './cardsList.module.css';
 import { ArtObject } from '../../types/types';
 
 export default class CardsList extends React.Component<
-  unknown,
-  { pictures: ArtObject[]; isLoaded: boolean }
+  Record<string, string>,
+  { pictures: ArtObject[]; isLoaded: boolean; lastRequestedValue?: string }
 > {
-  constructor(props: unknown) {
+  constructor(props: { lastRequestedValue: string }) {
     super(props);
     this.state = {
       pictures: [],
       isLoaded: false,
+      lastRequestedValue: this.props.lastRequestedValue,
     };
   }
 
   componentDidMount() {
     this.setState({ isLoaded: false });
-    getPictures(5)
+    searchByCentury(this.state.lastRequestedValue)
       .then((response) => response.json())
       .then(({ artObjects }) => {
         this.setState({ pictures: artObjects });
