@@ -1,22 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Bellefair&family=Poppins:ital@0;1&display=swap');
+
 :root {
-  line-height: 1.5;
+  --font-basic: 'Poppins', sans-serif;
+  --font-accent: 'Bellefair', serif;
+
+  --color-black: #272727;
+  --color-gold: #c29545;
+  --color-beige: #f8e6bd;
+  --color-red: #bb2f29;
+  --color-gray: #d9d9d9;
+
+  line-height: 1.2;
+  font-family: var(--font-basic);
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --color-black: #272727;
-  --color-gold: #c29545;
-  --color-beige: #f8e6bd;
-  --color-red: #bb2f29;
-  --color-gray: #d9d9d9;
+}
+
+body::-webkit-scrollbar {
+  width: 15px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--color-black);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--color-gold);
+  border-radius: 20px;
+  border: 5px solid var(--color-black);
 }
 
 body {
-  margin: 0;
+  margin: 10px auto;
   display: flex;
   min-width: 320px;
+  max-width: 1280px;
   min-height: 100vh;
   background-color: var(--color-black);
 }
