@@ -21,7 +21,6 @@ export default class Search extends React.Component<
 
   public handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(this.state.inputValue);
     this.setState({ inputValue: '' });
   };
 
