@@ -31,6 +31,7 @@ export default class Search extends React.Component<
         <input
           type="text"
           value={this.state.inputValue}
+          placeholder="Search something beautiful..."
           onChange={this.handleChange}
           className={styles.input}
         />
