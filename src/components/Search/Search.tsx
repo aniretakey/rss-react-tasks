@@ -13,6 +13,7 @@ export default class Search extends React.Component<
     super(props);
     this.state = {
       inputValue: this.inputValueFromLS ? this.inputValueFromLS : '',
+      isError: false,
     };
     this.btnRef = React.createRef();
     this.inputRef = React.createRef();
@@ -22,7 +23,7 @@ export default class Search extends React.Component<
     this.setState({ inputValue: e.target.value });
   };
 
-  public handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  private handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     localStorage.setItem(
       'inputValue',
@@ -31,7 +32,16 @@ export default class Search extends React.Component<
     this.setState({ inputValue: '' });
   };
 
+  private handleError = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    this.setState({ isError: true });
+  };
+
   render() {
+    if (this.state.isError) {
+      throw new Error('I crashed!');
+    }
+
     return (
       <>
         <h1 className={styles.title}>
@@ -63,6 +73,9 @@ export default class Search extends React.Component<
                 fill="#efeff1"
               ></path>
             </svg>
+          </button>
+          <button onClick={this.handleError} className={styles.searchBtn}>
+            Throw error
           </button>
         </form>
       </>

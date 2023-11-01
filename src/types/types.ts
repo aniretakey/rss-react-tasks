@@ -1,5 +1,6 @@
 export interface InputState {
   inputValue: string;
+  isError: boolean;
 }
 
 export interface CardsProps {
