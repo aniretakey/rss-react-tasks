@@ -43,7 +43,7 @@
     background-color: var(--color-black);
 }
 
-.searchBtn {
+.searchBtn, .errorBtn {
     border: none;
     cursor: pointer;
     background-color:  var(--color-red);
@@ -60,4 +60,10 @@
 
 .searchBtn:hover {
     box-shadow: var(--color-gold) 0 0 5px;
+}
+
+.errorBtn {
+    margin-left: 10px;
+    border-radius: 7px;
+    color: var(--color-beige);
 }

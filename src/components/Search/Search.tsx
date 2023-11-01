@@ -74,7 +74,7 @@ export default class Search extends React.Component<
               ></path>
             </svg>
           </button>
-          <button onClick={this.handleError} className={styles.searchBtn}>
+          <button onClick={this.handleError} className={styles.errorBtn}>
             Throw error
           </button>
         </form>
