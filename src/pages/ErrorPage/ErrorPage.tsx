@@ -1,4 +1,4 @@
-import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { useRouteError, isRouteErrorResponse, Link } from 'react-router-dom';
 import styles from './errorPage.module.css';
 
 export function ErrorPage() {
@@ -12,14 +12,16 @@ export function ErrorPage() {
     <div id="error-page" className={styles.errorPage}>
       <h1 className={styles.title}>Oops!</h1>
       <p>Sorry, an unexpected error has occurred...</p>
-      {/*<p className={styles.description}>*/}
-      {/*  <i>{error.statusText}</i>*/}
-      {/*</p>*/}
+      <p className={styles.description}>
+        <i>---- {error.statusText} ----</i>
+      </p>
       <p>
         ...but you can find something beautiful on{' '}
-        <a className={styles.link} href="/">
-          main page
-        </a>
+        {
+          <Link className={styles.link} to="/">
+            main page
+          </Link>
+        }
       </p>
     </div>
   );
