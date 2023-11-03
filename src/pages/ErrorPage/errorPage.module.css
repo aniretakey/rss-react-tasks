@@ -1,0 +1,24 @@
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+
+  font: var(--font-accent);
+  font-size: 20px;
+  color: var(--color-beige);
+}
+
+.title {
+  color: var(--color-gold);
+}
+
+.description {
+  margin-top: 0;
+  font-size: smaller;
+}
+
+.link {
+  color: var(--color-gold);
+}
