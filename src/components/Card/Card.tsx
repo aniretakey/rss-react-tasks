@@ -4,7 +4,7 @@ import { CardsProps } from '../../types/types';
 
 const Card = (pictures: CardsProps) => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} id={pictures.objectNum}>
       <img
         src={pictures.imgURL}
         alt={pictures.title}

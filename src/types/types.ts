@@ -3,6 +3,7 @@ export interface CardsProps {
   imgURL: string;
   author: string;
   key: string;
+  objectNum: string;
 }
 
 type ImageType = {

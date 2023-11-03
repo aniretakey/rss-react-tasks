@@ -12,8 +12,9 @@ const CardsList = (props: CardsListProps) => {
     <div className={styles.cardsContainer}>
       {props.cardsData &&
         props.cardsData.map(
-          ({ id, title, webImage, principalOrFirstMaker }) => (
+          ({ id, title, webImage, principalOrFirstMaker, objectNumber }) => (
             <Card
+              objectNum={objectNumber}
               key={id}
               imgURL={webImage.url}
               title={title}
