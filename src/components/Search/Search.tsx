@@ -6,7 +6,7 @@ export default class Search extends React.Component<
   Record<string, unknown>,
   InputState
 > {
-  private inputValueFromLS = localStorage.getItem('inputValue');
+  private inputValueFromLS = localStorage.getItem('searchValue');
   btnRef: React.RefObject<HTMLButtonElement>;
   inputRef: React.RefObject<HTMLInputElement>;
   constructor(props: Record<string, unknown>) {
@@ -26,7 +26,7 @@ export default class Search extends React.Component<
   private handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     localStorage.setItem(
-      'inputValue',
+      'searchValue',
       this.inputRef.current?.value.trim() || ''
     );
     this.setState({ inputValue: '' });

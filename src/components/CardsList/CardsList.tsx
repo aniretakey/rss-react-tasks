@@ -5,7 +5,6 @@ import { ArtObject } from '../../types/types';
 
 interface CardsListProps {
   cardsData: ArtObject[];
-  loading: boolean;
 }
 
 const CardsList = (props: CardsListProps) => {
