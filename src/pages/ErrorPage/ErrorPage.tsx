@@ -1,13 +1,25 @@
 import { useRouteError, isRouteErrorResponse, Link } from 'react-router-dom';
 import styles from './errorPage.module.css';
+import React from 'react';
 
 export function ErrorPage() {
   const error = useRouteError();
   console.error(error);
 
   if (!isRouteErrorResponse(error)) {
-    return <p>{'Oops! Unknown Error'}</p>;
+    return (
+      <div className={styles.errorPage}>
+        <h1>Something went wrong.</h1>
+        <p>
+          Please, go on a{' '}
+          <Link to="/" className={styles.link}>
+            main page
+          </Link>
+        </p>
+      </div>
+    );
   }
+
   return (
     <div id="error-page" className={styles.errorPage}>
       <h1 className={styles.title}>Oops!</h1>
