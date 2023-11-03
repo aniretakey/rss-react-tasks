@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Search from './components/Search/Search';
+import { Search } from './components/Search/Search';
 import { CardsList } from './components/CardsList/CardsList';
 import { searchByCentury } from './utils/requests';
 import { ArtObject } from './types/types';
@@ -11,21 +11,25 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   const initialSearchValue = localStorage.getItem('searchValue') || '19';
-  // const [lastRequest, setLastRequest] = useState(initialSearchValue);
+  const [lastRequest, setLastRequest] = useState(initialSearchValue);
+
+  const updateSearchValue = (value: string) => {
+    setLoading(true);
+    setLastRequest(value);
+  };
 
   useEffect(() => {
-    searchByCentury(initialSearchValue)
+    searchByCentury(lastRequest)
       .then((response) => response.json())
       .then(({ artObjects }) => {
         setCardsData(artObjects);
         setLoading(false);
       });
-  }, [initialSearchValue]);
+  }, [lastRequest]);
 
-  // TODO: add initialSearchValue to props in search component
   return (
     <>
-      <Search />
+      <Search lastSearch={lastRequest} updateData={updateSearchValue} />
       {loading ? <Loader /> : <CardsList cardsData={cardsData} />}
     </>
   );
