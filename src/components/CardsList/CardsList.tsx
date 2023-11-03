@@ -1,63 +1,29 @@
 import React from 'react';
-import { searchByCentury } from '../../utils/requests';
-import Card from '../Card/Card';
-import { Loader } from '../Loader/Loader';
+import { Card } from '../Card/Card';
 import styles from './cardsList.module.css';
 import { ArtObject } from '../../types/types';
 
-export default class CardsList extends React.Component<
-  Record<string, string>,
-  { pictures: ArtObject[]; isLoaded: boolean; lastRequestedValue?: string }
-> {
-  constructor(props: { lastRequestedValue: string }) {
-    super(props);
-    this.state = {
-      pictures: [],
-      isLoaded: false,
-      lastRequestedValue: this.props.lastRequestedValue,
-    };
-  }
-
-  componentDidMount() {
-    this.setState({ isLoaded: false });
-    searchByCentury(this.state.lastRequestedValue)
-      .then((response) => response.json())
-      .then(({ artObjects }) => {
-        this.setState({ pictures: artObjects });
-        this.setState({ isLoaded: true });
-      });
-  }
-
-  render() {
-    const { pictures: allPictures } = this.state;
-    return (
-      <div className={styles.cardsContainer}>
-        {allPictures &&
-          (this.state.isLoaded ? (
-            allPictures.map(
-              ({
-                id,
-                title,
-                webImage,
-                principalOrFirstMaker,
-              }: {
-                id: string;
-                title: string;
-                webImage: { url: string };
-                principalOrFirstMaker: string;
-              }) => (
-                <Card
-                  key={id}
-                  imgURL={webImage.url}
-                  title={title}
-                  author={principalOrFirstMaker}
-                />
-              )
-            )
-          ) : (
-            <Loader />
-          ))}
-      </div>
-    );
-  }
+interface CardsListProps {
+  cardsData: ArtObject[];
+  loading: boolean;
 }
+
+const CardsList = (props: CardsListProps) => {
+  return (
+    <div className={styles.cardsContainer}>
+      {props.cardsData &&
+        props.cardsData.map(
+          ({ id, title, webImage, principalOrFirstMaker }) => (
+            <Card
+              key={id}
+              imgURL={webImage.url}
+              title={title}
+              author={principalOrFirstMaker}
+            />
+          )
+        )}
+    </div>
+  );
+};
+
+export { CardsList };
