@@ -37,7 +37,7 @@ const Search = ({ lastSearch, updateData }: SearchProps) => {
   }
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <h1 className={styles.title}>
         Type the century in which the art object is made (0 - 21)
       </h1>
@@ -72,7 +72,7 @@ const Search = ({ lastSearch, updateData }: SearchProps) => {
           Throw error
         </button>
       </form>
-    </>
+    </div>
   );
 };
 
