@@ -29,3 +29,13 @@ export interface ArtObject {
   title: string;
   webImage: ImageType;
 }
+
+export type PaginationProps = {
+  currentPage: number;
+  onFirstPageClick: () => void;
+  onNextPageClick: () => void;
+  onPrevPageClick: () => void;
+  onLastPageClick: () => void;
+  disablePrev: boolean;
+  disableNext: boolean;
+};
