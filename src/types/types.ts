@@ -38,4 +38,5 @@ export type PaginationProps = {
   onLastPageClick: () => void;
   disablePrev: boolean;
   disableNext: boolean;
+  lastPageNum: number;
 };

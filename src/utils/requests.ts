@@ -8,7 +8,6 @@ async function searchByCentury(
   const URL = `https://www.rijksmuseum.nl/api/en/collection/?key=${key}&imgonly=true&f.dating.period=${+century}&ps=${itemsOnPage}&p=${page}`;
   return await fetch(URL);
 }
-// TODO: MAX IMAGES COUNT = 10 000 (itemsOnPage * page<= 10 000)
 
 async function getCardsData(page: number): Promise<Response> {
   const itemsCount = 10;
@@ -17,7 +16,7 @@ async function getCardsData(page: number): Promise<Response> {
 }
 
 async function getPictureByKey(key: string): Promise<{ data: Response }> {
-  const URL = `https://www.rijksmuseum.nl/api/en/collection/${key}?&imgonly=truekey=OS3z3UmI`;
+  const URL = `https://www.rijksmuseum.nl/api/en/collection/${key}?&imgonly=true&key=OS3z3UmI`;
   const data = await fetch(URL);
   return { data };
 }

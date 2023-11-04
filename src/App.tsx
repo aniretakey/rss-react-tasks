@@ -10,16 +10,20 @@ import './App.css';
 
 const App = () => {
   const [cardsData, setCardsData] = useState<ArtObject[]>([]);
+  const [totalCardsCount, setTotalCardsCount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [firstPage, setFirstPage] = useState(true);
-  const [lastPage, setLastPage] = useState(false);
+  const [isFirstPage, setIsFirstPage] = useState(true);
+  const [lastPage, setLastPage] = useState(null);
+
   const initialSearchValue = localStorage.getItem('searchValue') || '19';
   const [lastRequest, setLastRequest] = useState(initialSearchValue);
 
   const updateSearchValue = (value: string) => {
     setLoading(true);
     setPage(1);
+    setIsFirstPage(true);
+    setLastPage(null);
     setLastRequest(value);
   };
 
@@ -28,43 +32,38 @@ const App = () => {
   useEffect(() => {
     searchByCentury(lastRequest, page, itemsOnPage)
       .then((response) => response.json())
-      .then(({ artObjects }) => {
+      .then(({ artObjects, count }) => {
         setCardsData(artObjects);
+        count > 10000 ? setTotalCardsCount(10000) : setTotalCardsCount(count);
+        //TODO set items per page instead of 10
+        setLastPage(Math.ceil(totalCardsCount / 10));
         setLoading(false);
       });
-  }, [lastRequest, page]);
+  }, [lastPage, totalCardsCount, lastRequest, page]);
 
   const handleFirstPageClick = useCallback(() => {
     setPage(1);
-    setFirstPage(true);
-    setLastPage(false);
+    setIsFirstPage(true);
   }, []);
 
   const handleNextPageClick = useCallback(() => {
     const newPage = page + 1;
     setPage(newPage);
-    setFirstPage(false);
-    //TODO: set last page by fetching data count
-    if (newPage === 100) {
-      setLastPage(true);
-    }
-  }, [page]);
+    setIsFirstPage(false);
+  }, [lastPage, page]);
 
   const handlePrevPageClick = useCallback(() => {
     const newPage = page - 1;
     setPage(newPage);
-    setLastPage(false);
     if (newPage === 1) {
-      setFirstPage(true);
+      setIsFirstPage(true);
     }
   }, [page]);
 
-  //TODO: set last page by fetching data count
   const handleLastPageClick = useCallback(() => {
-    setPage(100);
-    setLastPage(true);
-    setFirstPage(false);
-  }, []);
+    setPage(lastPage);
+    setIsFirstPage(false);
+  }, [lastPage]);
 
   return (
     <>
@@ -80,8 +79,9 @@ const App = () => {
             onNextPageClick={handleNextPageClick}
             onPrevPageClick={handlePrevPageClick}
             onLastPageClick={handleLastPageClick}
-            disableNext={lastPage}
-            disablePrev={firstPage}
+            disableNext={page === lastPage}
+            disablePrev={isFirstPage}
+            lastPageNum={lastPage}
           />
         </>
       )}
