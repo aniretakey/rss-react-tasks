@@ -2,8 +2,8 @@ const key = import.meta.env.VITE_API_TOKEN;
 
 async function searchByCentury(
   century = '1',
-  page? = 1,
-  itemsOnPage? = 10
+  page = 1,
+  itemsOnPage = 10
 ): Promise<Response> {
   const URL = `https://www.rijksmuseum.nl/api/en/collection/?key=${key}&imgonly=true&f.dating.period=${+century}&ps=${itemsOnPage}&p=${page}`;
   return await fetch(URL);
@@ -15,10 +15,9 @@ async function getCardsData(page: number): Promise<Response> {
   return await fetch(URL);
 }
 
-async function getPictureByKey(key: string): Promise<{ data: Response }> {
-  const URL = `https://www.rijksmuseum.nl/api/en/collection/${key}?&imgonly=true&key=OS3z3UmI`;
-  const data = await fetch(URL);
-  return { data };
+async function getPictureByKey(cardKey: string): Promise<Response> {
+  const URL = `https://www.rijksmuseum.nl/api/en/collection/${cardKey}?key=${key}&imgonly=true`;
+  return await fetch(URL);
 }
 
-export { getCardsData, searchByCentury };
+export { getCardsData, searchByCentury, getPictureByKey };

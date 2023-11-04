@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Card } from '../Card/Card';
 import styles from './cardsList.module.css';
@@ -14,23 +14,24 @@ const CardsList = (props: { lastReq?: string }) => {
 
   //TODO refactor state (make 1 state object instead of lot of different states)
   const [cardsData, setCardsData] = useState<ArtObject[]>([]);
-  const [totalCardsCount, setTotalCardsCount] = useState(null);
+  const [totalCardsCount, setTotalCardsCount] = useState<number>();
   // const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(pageNumFromURL || 1);
   const [isFirstPage, setIsFirstPage] = useState(
     !(pageNumFromURL && pageNumFromURL !== 1)
   );
-  const [lastPage, setLastPage] = useState(null);
+  const [lastPage, setLastPage] = useState<number>();
   const [lastRequest, setLastRequest] = useState(initialSearchValue);
 
+  const navigate = useNavigate();
   const itemsOnPage = 10;
 
   useEffect(() => {
-    if (props.lastReq !== lastRequest) {
+    if (props.lastReq !== lastRequest && props.lastReq) {
       setLastRequest(props.lastReq);
       setPage(1);
       setIsFirstPage(true);
-      setLastPage(null);
+      // setLastPage(null);
     }
     searchByCentury(lastRequest, page, itemsOnPage)
       .then((response) => response.json())
@@ -38,7 +39,9 @@ const CardsList = (props: { lastReq?: string }) => {
         setCardsData(artObjects);
         count > 10000 ? setTotalCardsCount(10000) : setTotalCardsCount(count);
         //TODO set items per page instead of 10
-        setLastPage(Math.ceil(totalCardsCount / 10));
+        totalCardsCount && setLastPage(Math.ceil(totalCardsCount / 10));
+        //TODO fix loader
+
         // setLoading(false);
       });
   }, [props.lastReq, lastRequest, lastPage, totalCardsCount, page]);
@@ -63,37 +66,53 @@ const CardsList = (props: { lastReq?: string }) => {
   }, [page]);
 
   const handleLastPageClick = useCallback(() => {
-    setPage(lastPage);
+    lastPage && setPage(lastPage);
     setIsFirstPage(false);
   }, [lastPage]);
 
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement> | undefined) => {
+    e?.preventDefault();
+    const cardKey = (e?.target as HTMLElement).closest('div')?.id;
+    navigate(`/details/${cardKey}`);
+  };
+
   return (
-    <>
-      <div className={styles.cardsContainer}>
-        {cardsData &&
-          cardsData.map(
-            ({ id, title, webImage, principalOrFirstMaker, objectNumber }) => (
-              <Card
-                objectNum={objectNumber}
-                key={id}
-                imgURL={webImage.url}
-                title={title}
-                author={principalOrFirstMaker}
-              />
-            )
-          )}
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <div className={styles.cardsContainer}>
+          {cardsData &&
+            cardsData.map(
+              ({
+                id,
+                title,
+                webImage,
+                principalOrFirstMaker,
+                objectNumber,
+              }) => (
+                <Card
+                  objectNum={objectNumber}
+                  key={id}
+                  imgURL={webImage.url}
+                  title={title}
+                  author={principalOrFirstMaker}
+                  clickHandler={handleCardClick}
+                />
+              )
+            )}
+        </div>
+        <Pagination
+          currentPage={page}
+          onFirstPageClick={handleFirstPageClick}
+          onNextPageClick={handleNextPageClick}
+          onPrevPageClick={handlePrevPageClick}
+          onLastPageClick={handleLastPageClick}
+          disableNext={page === lastPage}
+          disablePrev={isFirstPage}
+          lastPageNum={lastPage}
+        />
       </div>
-      <Pagination
-        currentPage={page}
-        onFirstPageClick={handleFirstPageClick}
-        onNextPageClick={handleNextPageClick}
-        onPrevPageClick={handlePrevPageClick}
-        onLastPageClick={handleLastPageClick}
-        disableNext={page === lastPage}
-        disablePrev={isFirstPage}
-        lastPageNum={lastPage}
-      />
-    </>
+      <Outlet />
+    </div>
   );
 };
 

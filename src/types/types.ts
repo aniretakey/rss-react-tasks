@@ -1,9 +1,12 @@
+import React from 'react';
+
 export interface CardsProps {
   title: string;
   imgURL: string;
   author: string;
   key: string;
   objectNum: string;
+  clickHandler?: (e: React.MouseEvent<HTMLDivElement> | undefined) => void;
 }
 
 type ImageType = {
@@ -17,7 +20,7 @@ type ImageType = {
 
 export interface ArtObject {
   hasImage?: boolean;
-  headerImage: ImageType;
+  headerImage?: ImageType;
   id: string;
   links?: { self: string; web: string };
   longTitle: string;
@@ -28,6 +31,7 @@ export interface ArtObject {
   showImage?: boolean;
   title: string;
   webImage: ImageType;
+  description?: string;
 }
 
 export type PaginationProps = {
@@ -38,5 +42,5 @@ export type PaginationProps = {
   onLastPageClick: () => void;
   disablePrev: boolean;
   disableNext: boolean;
-  lastPageNum: number;
+  lastPageNum: number | undefined;
 };

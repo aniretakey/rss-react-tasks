@@ -4,8 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { App } from './App';
 import { ErrorPage } from './pages/ErrorPage/ErrorPage';
+import { Details } from './components/Details/Details';
 import './index.css';
-import { CardsList } from './components/CardsList/CardsList';
 
 const router = createBrowserRouter([
   {
@@ -14,9 +14,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/',
-        search: '?page=',
-        element: <CardsList />,
+        path: '/page/:num',
+        element: null,
+      },
+      {
+        path: '/details',
+        children: [
+          {
+            path: '/details/:id',
+            element: <Details />,
+          },
+        ],
       },
     ],
   },
