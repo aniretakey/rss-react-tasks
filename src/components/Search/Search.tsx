@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styles from './search.module.css';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchProps {
   lastSearch: string;
@@ -7,11 +8,11 @@ interface SearchProps {
 }
 
 const Search = ({ lastSearch, updateData }: SearchProps) => {
+  const navigate = useNavigate();
   const initialInputValue = lastSearch || '';
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState(initialInputValue);
   const [isError, setError] = useState(false);
-
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +25,7 @@ const Search = ({ lastSearch, updateData }: SearchProps) => {
     if (newValue) {
       updateData(newValue);
       localStorage.setItem('searchValue', newValue);
+      navigate('/');
     }
   };
 

@@ -4,7 +4,6 @@ import React from 'react';
 
 export function ErrorPage() {
   const error = useRouteError();
-  console.error(error);
 
   if (!isRouteErrorResponse(error)) {
     return (

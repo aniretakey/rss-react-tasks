@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { PaginationProps } from '../../types/types';
 import styles from './pagination.module.css';
-import { Link } from 'react-router-dom';
 
 function Pagination(props: PaginationProps) {
   const {
@@ -17,7 +17,7 @@ function Pagination(props: PaginationProps) {
 
   return (
     <div className={styles.paginationContainer}>
-      <Link to={`/page/1`}>
+      <Link to={`/?page=1`}>
         <button
           className={styles.navBtn}
           type="button"
@@ -28,7 +28,7 @@ function Pagination(props: PaginationProps) {
         </button>
       </Link>
 
-      <Link to={`/page/${currentPage - 1}`}>
+      <Link to={`/?page=${currentPage - 1}`}>
         <button
           className={styles.navBtn}
           type="button"
@@ -41,7 +41,7 @@ function Pagination(props: PaginationProps) {
 
       <p className={styles.pageNum}>{currentPage}</p>
 
-      <Link to={`/page/${currentPage + 1}`}>
+      <Link to={`/?page=${currentPage + 1}`}>
         <button
           className={styles.navBtn}
           type="button"
@@ -52,7 +52,7 @@ function Pagination(props: PaginationProps) {
         </button>
       </Link>
 
-      <Link to={`/page/${lastPageNum}`}>
+      <Link to={`/?page=${lastPageNum}`}>
         <button
           className={styles.navBtn}
           type="button"
