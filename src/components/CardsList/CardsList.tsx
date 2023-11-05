@@ -40,8 +40,6 @@ const CardsList = (props: { lastReq?: string }) => {
         count > 10000 ? setTotalCardsCount(10000) : setTotalCardsCount(count);
         totalCardsCount &&
           setLastPage(Math.ceil(totalCardsCount / itemsOnPage));
-        //TODO fix loader
-
         setLoading(false);
       });
   }, [
@@ -55,11 +53,13 @@ const CardsList = (props: { lastReq?: string }) => {
   ]);
 
   const handleFirstPageClick = useCallback(() => {
+    setLoading(true);
     setPage(1);
     setIsFirstPage(true);
   }, []);
 
   const handlePrevPageClick = useCallback(() => {
+    setLoading(true);
     const newPage = page - 1;
     setPage(newPage);
     if (newPage === 1) {
@@ -68,12 +68,14 @@ const CardsList = (props: { lastReq?: string }) => {
   }, [page]);
 
   const handleNextPageClick = useCallback(() => {
+    setLoading(true);
     const newPage = page + 1;
     setPage(newPage);
     setIsFirstPage(false);
   }, [page]);
 
   const handleLastPageClick = useCallback(() => {
+    setLoading(true);
     lastPage && setPage(lastPage);
     setIsFirstPage(false);
   }, [lastPage]);
@@ -85,6 +87,7 @@ const CardsList = (props: { lastReq?: string }) => {
   };
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setLoading(true);
     const newItemsCount = +e.target.value;
     if (newItemsCount !== itemsOnPage) {
       setItemsOnPage(newItemsCount);
@@ -143,6 +146,7 @@ const CardsList = (props: { lastReq?: string }) => {
               lastPageNum={lastPage}
             />
           </div>
+
           <Outlet />
         </>
       )}
