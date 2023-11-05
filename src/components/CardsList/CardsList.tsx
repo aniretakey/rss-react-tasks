@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Card } from '../Card/Card';
@@ -22,9 +22,9 @@ const CardsList = (props: { lastReq?: string }) => {
   );
   const [lastPage, setLastPage] = useState<number>();
   const [lastRequest, setLastRequest] = useState(initialSearchValue);
+  const [itemsOnPage, setItemsOnPage] = useState(10);
 
   const navigate = useNavigate();
-  const itemsOnPage = 10;
 
   useEffect(() => {
     if (props.lastReq !== lastRequest && props.lastReq) {
@@ -38,13 +38,20 @@ const CardsList = (props: { lastReq?: string }) => {
       .then(({ artObjects, count }) => {
         setCardsData(artObjects);
         count > 10000 ? setTotalCardsCount(10000) : setTotalCardsCount(count);
-        //TODO set items per page instead of 10
-        totalCardsCount && setLastPage(Math.ceil(totalCardsCount / 10));
+        totalCardsCount &&
+          setLastPage(Math.ceil(totalCardsCount / itemsOnPage));
         //TODO fix loader
 
         // setLoading(false);
       });
-  }, [props.lastReq, lastRequest, lastPage, totalCardsCount, page]);
+  }, [
+    props.lastReq,
+    lastRequest,
+    itemsOnPage,
+    lastPage,
+    totalCardsCount,
+    page,
+  ]);
 
   const handleFirstPageClick = useCallback(() => {
     setPage(1);
@@ -76,9 +83,25 @@ const CardsList = (props: { lastReq?: string }) => {
     navigate(`/details/${cardKey}`);
   };
 
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newItemsCount = +e.target.value;
+    if (newItemsCount !== itemsOnPage) {
+      setItemsOnPage(newItemsCount);
+      setPage(1);
+      setIsFirstPage(true);
+      navigate('/page/1');
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
+        <select className={styles.pagesSelect} onChange={handleSelectChange}>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+
         <div className={styles.cardsContainer}>
           {cardsData &&
             cardsData.map(
@@ -100,6 +123,7 @@ const CardsList = (props: { lastReq?: string }) => {
               )
             )}
         </div>
+
         <Pagination
           currentPage={page}
           onFirstPageClick={handleFirstPageClick}

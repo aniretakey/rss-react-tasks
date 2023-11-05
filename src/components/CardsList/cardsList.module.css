@@ -22,3 +22,23 @@
   flex-wrap: wrap;
   padding: 0 10px;
 }
+
+.pagesSelect {
+  cursor: pointer;
+  align-self: end;
+  margin: 0 20px 20px;
+  width: 70px;
+  height: 40px;
+  background-color: var(--color-beige);
+  border-radius: 18px;
+  border: none;
+  font: var(--font-basic);
+  font-size: 18px;
+  color: var(--color-black);
+  transition: all ease-in-out 0.3s;
+  text-align: center;
+}
+
+.pagesSelect:hover {
+  box-shadow: var(--color-gold) 0 0 8px;
+}

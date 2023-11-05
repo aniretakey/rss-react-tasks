@@ -1,6 +1,6 @@
 .paginationContainer {
   margin: 0 auto;
-  max-width: 300px;
+  min-width: 300px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -19,17 +19,18 @@
   transition: all ease-in-out 0.3s;
 }
 
+.navBtn:hover {
+  cursor: pointer;
+  background-color: var(--color-gold);
+  box-shadow: var(--color-gold) 0 0 5px;
+}
+
 .pageNum {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
-
-.navBtn:hover {
-  cursor: pointer;
-  background-color: var(--color-gold);
-  box-shadow: var(--color-gold) 0 0 5px;
+  background-color: #e6ac84;
 }
 
 .navBtn:disabled {
