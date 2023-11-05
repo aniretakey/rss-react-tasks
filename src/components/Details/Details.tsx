@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getPictureByKey } from '../../utils/requests';
 import { ArtObject } from '../../types/types';
@@ -49,7 +49,23 @@ function Details() {
             />
             <div className={styles.detailsText}>
               <h1 className={styles.detailsTitle}>{cardData?.title}</h1>
-              <p>{cardData?.description}</p>
+              {cardData.principalOrFirstMaker && (
+                <p>
+                  <b>Author:</b> {cardData.principalOrFirstMaker}
+                </p>
+              )}
+              <p>
+                <b>Year:</b> {cardData.dating?.yearEarly}
+              </p>
+              <p>
+                <b>Materials:</b> {cardData.materials?.join(', ')}
+              </p>
+              {cardData.techniques?.length !== 0 && (
+                <p>
+                  <b>Techniques:</b> {cardData.techniques?.join(', ')}
+                </p>
+              )}
+              <p className={styles.detailsDescr}>{cardData?.description}</p>
             </div>
           </div>
         </div>

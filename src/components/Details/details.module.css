@@ -47,14 +47,16 @@
 }
 
 .detailsText {
+  font-family: var(--font-basic);
   display: flex;
   flex-direction: column;
   justify-content: left;
-  align-items: center;
+  align-items: flex-start;
   padding: 15px;
 }
 
 .detailsTitle {
+  align-self: center;
   margin: 5px 10px;
   color: var(--color-red);
   text-align: center;
@@ -81,4 +83,12 @@
 
 .closeIcon:hover {
   transform: rotate(-90deg);
+}
+
+b {
+  color: var(--color-red)
+}
+
+.detailsDescr {
+  text-align: justify;
 }

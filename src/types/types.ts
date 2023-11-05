@@ -32,6 +32,11 @@ export interface ArtObject {
   title: string;
   webImage: ImageType;
   description?: string;
+  materials?: string[];
+  techniques?: string[];
+  dating?: {
+    yearEarly?: number;
+  };
 }
 
 export type PaginationProps = {
