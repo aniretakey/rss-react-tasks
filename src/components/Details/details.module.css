@@ -33,15 +33,15 @@
   background-color: var(--color-beige);
 }
 
-.detailsContainer::-webkit-scrollbar {
+.innerContainer::-webkit-scrollbar {
   width: 15px;
 }
 
-.detailsContainer::-webkit-scrollbar-track {
+.innerContainer::-webkit-scrollbar-track {
   background: var(--color-black);
 }
 
-.detailsContainer::-webkit-scrollbar-thumb {
+.innerContainer::-webkit-scrollbar-thumb {
   background-color: var(--color-gold);
   border-radius: 20px;
   border: 5px solid var(--color-black);
