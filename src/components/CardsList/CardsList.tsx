@@ -1,84 +1,94 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-
 import { Card } from '../Card/Card';
-import styles from './cardsList.module.css';
-import { ArtObject } from '../../types/types';
-import { searchByCentury } from '../../utils/requests';
-import Pagination from '../Pagination/Pagination';
 import { Loader } from '../Loader/Loader';
+import Pagination from '../Pagination/Pagination';
+import { cardsListPropsType } from '../../types/types';
+import { searchByCentury } from '../../utils/requests';
+import styles from './cardsList.module.css';
 
 const CardsList = (props: { lastReq?: string }) => {
   const initialSearchValue = localStorage.getItem('searchValue') || '19';
+  const initialItemsPerPage = Number(localStorage.getItem('itemsPerPage'));
   const { pathname } = useLocation();
   const pageNumFromURL = +pathname.replace('/page/', '').trim();
-
-  //TODO refactor state (make 1 state object instead of lot of different states)
-  const [cardsData, setCardsData] = useState<ArtObject[]>([]);
-  const [totalCardsCount, setTotalCardsCount] = useState<number>();
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(pageNumFromURL || 1);
-  const [isFirstPage, setIsFirstPage] = useState(
-    !(pageNumFromURL && pageNumFromURL !== 1)
-  );
-  const [lastPage, setLastPage] = useState<number>();
-  const [lastRequest, setLastRequest] = useState(initialSearchValue);
-  const [itemsOnPage, setItemsOnPage] = useState(10);
-
   const navigate = useNavigate();
 
+  const initialState: cardsListPropsType = {
+    cardsData: [],
+    totalCardsCount: 10000,
+    loading: true,
+    currentPage: pageNumFromURL || 1,
+    lastPage: 10,
+    lastRequest: initialSearchValue,
+    itemsOnPage: initialItemsPerPage || 10,
+  };
+
+  const [state, setState] = useState(initialState);
+
   useEffect(() => {
-    if (props.lastReq !== lastRequest && props.lastReq) {
-      setLastRequest(props.lastReq);
-      setPage(1);
-      setIsFirstPage(true);
+    if (props.lastReq !== state.lastRequest && props.lastReq) {
+      const lastReqFromProps = props.lastReq;
+      setState((prevState) => ({
+        ...prevState,
+        lastRequest: lastReqFromProps,
+        currentPage: 1,
+      }));
     }
-    searchByCentury(lastRequest, page, itemsOnPage)
+
+    searchByCentury(state.lastRequest, state.currentPage, state.itemsOnPage)
       .then((response) => response.json())
       .then(({ artObjects, count }) => {
-        setCardsData(artObjects);
-        count > 10000 ? setTotalCardsCount(10000) : setTotalCardsCount(count);
-        totalCardsCount &&
-          setLastPage(Math.ceil(totalCardsCount / itemsOnPage));
-        setLoading(false);
+        count < 10000 &&
+          setState((prevState) => ({ ...prevState, totalCardsCount: count }));
+        setState((prevState) => ({
+          ...prevState,
+          cardsData: artObjects,
+          loading: false,
+          lastPage: Math.ceil(state.totalCardsCount / state.itemsOnPage),
+        }));
       });
   }, [
     props.lastReq,
-    lastRequest,
-    itemsOnPage,
-    lastPage,
-    totalCardsCount,
-    page,
-    loading,
+    state.currentPage,
+    state.itemsOnPage,
+    state.lastRequest,
+    state.totalCardsCount,
   ]);
 
   const handleFirstPageClick = useCallback(() => {
-    setLoading(true);
-    setPage(1);
-    setIsFirstPage(true);
+    setState((prevState) => ({
+      ...prevState,
+      loading: true,
+      currentPage: 1,
+    }));
   }, []);
 
   const handlePrevPageClick = useCallback(() => {
-    setLoading(true);
-    const newPage = page - 1;
-    setPage(newPage);
-    if (newPage === 1) {
-      setIsFirstPage(true);
-    }
-  }, [page]);
+    const newPage = state.currentPage - 1;
+    setState((prevState) => ({
+      ...prevState,
+      currentPage: newPage,
+      loading: true,
+    }));
+  }, [state.currentPage]);
 
   const handleNextPageClick = useCallback(() => {
-    setLoading(true);
-    const newPage = page + 1;
-    setPage(newPage);
-    setIsFirstPage(false);
-  }, [page]);
+    const newPage = state.currentPage + 1;
+    setState((prevState) => ({
+      ...prevState,
+      loading: true,
+      currentPage: newPage,
+    }));
+  }, [state.currentPage]);
 
   const handleLastPageClick = useCallback(() => {
-    setLoading(true);
-    lastPage && setPage(lastPage);
-    setIsFirstPage(false);
-  }, [lastPage]);
+    setState((prevState) => ({
+      ...prevState,
+      loading: true,
+      currentPage: state.lastPage,
+    }));
+  }, [state.lastPage]);
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement> | undefined) => {
     e?.preventDefault();
@@ -87,19 +97,22 @@ const CardsList = (props: { lastReq?: string }) => {
   };
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setLoading(true);
     const newItemsCount = +e.target.value;
-    if (newItemsCount !== itemsOnPage) {
-      setItemsOnPage(newItemsCount);
-      setPage(1);
-      setIsFirstPage(true);
+    if (newItemsCount !== state.itemsOnPage) {
+      localStorage.setItem('itemsPerPage', `${newItemsCount}`);
+      setState((prevState) => ({
+        ...prevState,
+        loading: true,
+        itemsOnPage: newItemsCount,
+        currentPage: 1,
+      }));
       navigate('/page/1');
     }
   };
 
   return (
     <div className={styles.wrapper}>
-      {loading ? (
+      {state.loading ? (
         <Loader />
       ) : (
         <>
@@ -107,6 +120,7 @@ const CardsList = (props: { lastReq?: string }) => {
             <select
               className={styles.pagesSelect}
               onChange={handleSelectChange}
+              defaultValue={state.itemsOnPage}
             >
               <option value="10">10</option>
               <option value="20">20</option>
@@ -114,8 +128,8 @@ const CardsList = (props: { lastReq?: string }) => {
             </select>
 
             <div className={styles.cardsContainer}>
-              {cardsData &&
-                cardsData.map(
+              {state.cardsData &&
+                state.cardsData.map(
                   ({
                     id,
                     title,
@@ -136,14 +150,14 @@ const CardsList = (props: { lastReq?: string }) => {
             </div>
 
             <Pagination
-              currentPage={page}
+              currentPage={state.currentPage}
               onFirstPageClick={handleFirstPageClick}
               onNextPageClick={handleNextPageClick}
               onPrevPageClick={handlePrevPageClick}
               onLastPageClick={handleLastPageClick}
-              disableNext={page === lastPage}
-              disablePrev={isFirstPage}
-              lastPageNum={lastPage}
+              disableNext={state.currentPage === state.lastPage}
+              disablePrev={state.currentPage === 1}
+              lastPageNum={state.lastPage}
             />
           </div>
 

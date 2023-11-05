@@ -49,3 +49,13 @@ export type PaginationProps = {
   disableNext: boolean;
   lastPageNum: number | undefined;
 };
+
+export type cardsListPropsType = {
+  cardsData: ArtObject[];
+  totalCardsCount: number;
+  loading: boolean;
+  currentPage: number;
+  lastPage: number;
+  lastRequest: string;
+  itemsOnPage: number;
+};
