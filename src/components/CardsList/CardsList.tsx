@@ -6,16 +6,17 @@ import styles from './cardsList.module.css';
 import { ArtObject } from '../../types/types';
 import { searchByCentury } from '../../utils/requests';
 import Pagination from '../Pagination/Pagination';
+import { Loader } from '../Loader/Loader';
 
 const CardsList = (props: { lastReq?: string }) => {
   const initialSearchValue = localStorage.getItem('searchValue') || '19';
-  const { search } = useLocation();
-  const pageNumFromURL = +search.replace('?page=', '').trim();
+  const { pathname } = useLocation();
+  const pageNumFromURL = +pathname.replace('/page/', '').trim();
 
   //TODO refactor state (make 1 state object instead of lot of different states)
   const [cardsData, setCardsData] = useState<ArtObject[]>([]);
   const [totalCardsCount, setTotalCardsCount] = useState<number>();
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(pageNumFromURL || 1);
   const [isFirstPage, setIsFirstPage] = useState(
     !(pageNumFromURL && pageNumFromURL !== 1)
@@ -31,7 +32,6 @@ const CardsList = (props: { lastReq?: string }) => {
       setLastRequest(props.lastReq);
       setPage(1);
       setIsFirstPage(true);
-      // setLastPage(null);
     }
     searchByCentury(lastRequest, page, itemsOnPage)
       .then((response) => response.json())
@@ -42,7 +42,7 @@ const CardsList = (props: { lastReq?: string }) => {
           setLastPage(Math.ceil(totalCardsCount / itemsOnPage));
         //TODO fix loader
 
-        // setLoading(false);
+        setLoading(false);
       });
   }, [
     props.lastReq,
@@ -51,6 +51,7 @@ const CardsList = (props: { lastReq?: string }) => {
     lastPage,
     totalCardsCount,
     page,
+    loading,
   ]);
 
   const handleFirstPageClick = useCallback(() => {
@@ -95,47 +96,56 @@ const CardsList = (props: { lastReq?: string }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <select className={styles.pagesSelect} onChange={handleSelectChange}>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-        </select>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className={styles.container}>
+            <select
+              className={styles.pagesSelect}
+              onChange={handleSelectChange}
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+            </select>
 
-        <div className={styles.cardsContainer}>
-          {cardsData &&
-            cardsData.map(
-              ({
-                id,
-                title,
-                webImage,
-                principalOrFirstMaker,
-                objectNumber,
-              }) => (
-                <Card
-                  objectNum={objectNumber}
-                  key={id}
-                  imgURL={webImage.url}
-                  title={title}
-                  author={principalOrFirstMaker}
-                  clickHandler={handleCardClick}
-                />
-              )
-            )}
-        </div>
+            <div className={styles.cardsContainer}>
+              {cardsData &&
+                cardsData.map(
+                  ({
+                    id,
+                    title,
+                    webImage,
+                    principalOrFirstMaker,
+                    objectNumber,
+                  }) => (
+                    <Card
+                      objectNum={objectNumber}
+                      key={id}
+                      imgURL={webImage.url}
+                      title={title}
+                      author={principalOrFirstMaker}
+                      clickHandler={handleCardClick}
+                    />
+                  )
+                )}
+            </div>
 
-        <Pagination
-          currentPage={page}
-          onFirstPageClick={handleFirstPageClick}
-          onNextPageClick={handleNextPageClick}
-          onPrevPageClick={handlePrevPageClick}
-          onLastPageClick={handleLastPageClick}
-          disableNext={page === lastPage}
-          disablePrev={isFirstPage}
-          lastPageNum={lastPage}
-        />
-      </div>
-      <Outlet />
+            <Pagination
+              currentPage={page}
+              onFirstPageClick={handleFirstPageClick}
+              onNextPageClick={handleNextPageClick}
+              onPrevPageClick={handlePrevPageClick}
+              onLastPageClick={handleLastPageClick}
+              disableNext={page === lastPage}
+              disablePrev={isFirstPage}
+              lastPageNum={lastPage}
+            />
+          </div>
+          <Outlet />
+        </>
+      )}
     </div>
   );
 };
